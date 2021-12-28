@@ -2,11 +2,9 @@ stages:
   - build
   - deploy
 before_script:
-  - export PRJ_DIR=${PWD}/Rest
-  - export DPS_DIR=${PWD}/Rest/department-service
-  - export EPS_DIR=${PWD}/Rest/employee-service
-  - export OGS_DIR=${PWD}/Rest/organization-service
-  - echo $PRJ_DIR
+  - export DPS_DIR=${PWD}/department-service
+  - export EPS_DIR=${PWD}/employee-service
+  - export OGS_DIR=${PWD}/organization-service
   - echo $DPS_DIR
   - echo $EPS_DIR
   - echo $OGS_DIR
