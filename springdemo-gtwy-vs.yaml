@@ -1,0 +1,90 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: springdemo-gateway
+spec:
+  selector:
+    istio: ingressgateway # use istio default controller
+  servers:
+    - port:
+        name: http
+        number: 80
+        protocol: HTTP
+      hosts:
+        - "*"
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: demo-service
+spec:
+  hosts:
+    - "*"
+  gateways:
+    - springdemo-gateway
+  http:
+    - match:
+        - uri:
+            prefix: "/employee"
+      route:
+        - destination:
+            port:
+              number: 8080
+            host: employee-service
+    - match:
+        - uri:
+            prefix: "/department"
+      route:
+        - destination:
+            port:
+              number: 8080
+            host: department-service
+    - match:
+        - uri:
+            prefix: "/organization"
+      route:
+        - destination:
+            port:
+              number: 8080
+            host: organization-service
+---
+#apiVersion: networking.istio.io/v1beta1
+#kind: VirtualService
+#metadata:
+#  name: department-service-route
+#spec:
+#  hosts:
+#    - "*"
+#  gateways:
+#    - springdemo-gateway
+#  http:
+#    - match:
+#        - uri:
+#            prefix: "/department"
+#      route:
+#        - destination:
+#            host: department-service
+#            subset: v1
+#            port:
+#              number: 8080
+#---
+#---
+#apiVersion: networking.istio.io/v1beta1
+#kind: VirtualService
+#metadata:
+#  name: employee-service-route
+#spec:
+#  hosts:
+#    - "*"
+#  gateways:
+#    - springdemo-gateway
+#  http:
+#    - match:
+#        - uri:
+#            prefix: "/employee"
+#      route:
+#        - destination:
+#            host: employee-service
+#            subset: v1
+#            port:
+#              number: 8080

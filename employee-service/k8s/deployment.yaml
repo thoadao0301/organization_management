@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: employee-service
+  labels:
+    app: employee-service
+spec:
+  selector:
+    app: employee-service
+  ports:
+    - port: 8080
+      name: http
+#  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: employee-service-v1
+  labels:
+    app: employee-service
+spec:
+  selector:
+    matchLabels:
+      app: employee-service
+  replicas: 1
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/inject: "true"
+      labels:
+        app: employee-service
+        version: v1
+    spec:
+      containers:
+        - name: employee-service
+          image: 'sieutromkid1412/employee-service:latest'
+          imagePullPolicy: Always
+          env:
+            - name: JAEGER_ENDPOINT
+              value: http://jaeger-collector.istio-system.svc:14268/api/traces
+            - name: JAEGER_PROPAGATION
+              value: b3
+          ports:
+            - containerPort: 8080

@@ -1,0 +1,23 @@
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: organization-service-destination
+spec:
+  host: organization-service
+  subsets:
+    - name: v1
+      labels:
+        version: v1
+---
+#apiVersion: networking.istio.io/v1beta1
+#kind: VirtualService
+#metadata:
+#  name: organization-service
+#spec:
+#  hosts:
+#    - organization-service
+#  http:
+#    - route:
+#        - destination:
+#            host: organization-service
+#            subset: v2

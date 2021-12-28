@@ -1,0 +1,40 @@
+stages:
+  - build
+  - deploy
+variables:
+
+
+before_script:
+  - export PRJ_DIR=${PWD}/Rest
+  - export DPS_DIR=${PWD}/Rest/department-service
+  - export EPS_DIR=${PWD}/Rest/employee-service
+  - export OGS_DIR=${PWD}/Rest/organization-service
+  - echo $PRJ_DIR
+  - echo $DPS_DIR
+  - echo $EPS_DIR
+  - echo $OGS_DIR
+  - echo docker info
+
+maven-build:
+  image: maven:3-jdk-8
+  stage: build
+  script:
+    - cd DPS_DIR
+    - mvn clean
+    - mvn install
+    - cd EPS_DIR
+    - mvn clean
+    - mvn install
+    - cd OGS_DIR
+    - mvn clean
+    - mvn install
+  tags:
+    - maytinh
+  only:
+    - main
+  artifacts:
+    expire_in: 2 weeks
+    paths:
+      - Rest/department-service/target/
+      - Rest/employee-service/target/
+      - Rest/organization-service/target/
