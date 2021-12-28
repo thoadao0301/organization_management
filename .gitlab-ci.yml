@@ -16,13 +16,13 @@ maven-build:
   image: maven:3-jdk-11
   stage: build
   script:
-    - cd DPS_DIR
+    - cd $DPS_DIR
     - mvn clean
     - mvn install
-    - cd EPS_DIR
+    - cd $EPS_DIR
     - mvn clean
     - mvn install
-    - cd OGS_DIR
+    - cd $OGS_DIR
     - mvn clean
     - mvn install
   tags:
