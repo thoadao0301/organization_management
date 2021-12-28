@@ -1,4 +1,4 @@
-image: gitlab-runener
+image: gitlab-runnner
 stages:
   - build
   - deploy
