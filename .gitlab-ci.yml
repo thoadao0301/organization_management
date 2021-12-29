@@ -51,17 +51,19 @@ before_script:
 build_image:
   stage: package
   script:
-    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
     - cd $DPS_DIR
     - docker build -t ${IMAGE_DPS} .
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
     - docker tag ${IMAGE_DPS} ${IMAGE_DPS}:latest
     - docker push ${IMAGE_DPS}:latest
     - cd $EPS_DIR
     - docker build -t ${IMAGE_EPS} .
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
     - docker tag ${IMAGE_EPS} ${IMAGE_EPS}:latest
     - docker push ${IMAGE_EPS}:latest
     - cd $OGS_DIR
     - docker build -t ${IMAGE_OGS} .
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
     - docker tag ${IMAGE_OGS} ${IMAGE_OGS}:latest
     - docker push ${IMAGE_OGS}:latest
   tags:
