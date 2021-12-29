@@ -49,7 +49,7 @@ build_image:
   stage: package
   image: docker:git
   script:
-    - docker login ${REGISTRY_URL} -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD}
+    - docker login ${REGISTRY_URL} 
     - cd $DPS_DIR
     - docker build -t ${IMAGE_DPS} .
     - docker tag ${IMAGE_DPS} ${IMAGE_DPS}:latest
