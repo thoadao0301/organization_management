@@ -16,14 +16,14 @@ variables:
   IMAGE_EPS : ${REGISTRY_URL}/employee-service
   IMAGE_OGS : ${REGISTRY_URL}/organization-service
 
-before_script:
-  - export DPS_DIR=${PWD}/department-service
-  - export EPS_DIR=${PWD}/employee-service
-  - export OGS_DIR=${PWD}/organization-service
-  - echo $DPS_DIR
-  - echo $EPS_DIR
-  - echo $OGS_DIR
-  - echo docker info
+# before_script:
+#   - export DPS_DIR=${PWD}/department-service
+#   - export EPS_DIR=${PWD}/employee-service
+#   - export OGS_DIR=${PWD}/organization-service
+#   - echo $DPS_DIR
+#   - echo $EPS_DIR
+#   - echo $OGS_DIR
+#   - echo docker info
 
 #maven-build:
 #  image: maven:3-jdk-11
@@ -76,9 +76,9 @@ kube_deploy:
     - apk update  && apk add --no-cache curl
     - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
     - chmod +x ./kubectl
-    - mv ./kubectl /usr/local/bin/kubectl
-    - kubectl version --client
-    - mkdir -p $HOME/.kube && cp $KUBE_CONFIG_FILE "$HOME/.kube/config"
+    - mkdir -p $HOME/.kube
+    - echo $KUBE_CONFIG_FILE > $HOME/.kube/config
+    - kubectl get node
   script:
     - kubectl apply -f zipkin.yaml
   tags:
