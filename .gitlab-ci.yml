@@ -1,6 +1,6 @@
-image: docker:latest
+image: docker:19.03.12
 services:
-  - name: docker:19.03.0-dind
+  - docker:19.03.12-dind
 stages:
   - build
   - package
