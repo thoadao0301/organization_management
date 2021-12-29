@@ -77,7 +77,7 @@ kube_deploy:
     - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
     - chmod +x ./kubectl && mv ./kubectl /usr/local/bin/kubectl
     - mkdir -p $HOME/.kube
-    - echo -n $KUBE_CONFIG
+    - echo -n $KUBE_CONFIG_FILE
     - kubectl config view
   script:
     - kubectl apply -f zipkin.yaml
