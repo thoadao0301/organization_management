@@ -1,6 +1,16 @@
 stages:
   - build
+  - -package
   - deploy
+
+variables:
+  DOCKER_DRIVER: overlay
+  DOCKER_BUILD_ID: ${CI_COMMIT_REF_NAME}_${CI_COMMIT_SHORT_SHA}
+  REGISTRY_URL: registry.gitlab.com/daolebaothoa123/rest-cicd
+  IMAGE_DPS : ${REGISTRY_URL}/department-service
+  IMAGE_EPS : ${REGISTRY_URL}/employee-service
+  IMAGE_OGS : ${REGISTRY_URL}/organization-service
+
 before_script:
   - export DPS_DIR=${PWD}/department-service
   - export EPS_DIR=${PWD}/employee-service
@@ -30,6 +40,44 @@ maven-build:
   artifacts:
     expire_in: 2 weeks
     paths:
-      - Rest/department-service/target/
-      - Rest/employee-service/target/
-      - Rest/organization-service/target/
+      - department-service/target/*.jar
+      - employee-service/target/*.jar
+      - organization-service/target/*.jar
+
+build_image:
+  stage: package
+  script:
+    - docker login ${REGISTRY_URL} -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD}
+    - cd $DPS_DIR
+    - docker build -t ${IMAGE_DPS} .
+    - docker tag ${IMAGE_DPS} ${IMAGE_DPS}:latest
+    - docker push ${IMAGE_DPS}:latest
+    - cd $EPS_DIR
+    - docker build -t ${IMAGE_EPS} .
+    - docker tag ${IMAGE_EPS} ${IMAGE_EPS}:latest
+    - docker push ${IMAGE_EPS}:latest
+    - cd $OGS_DIR
+    - docker build -t ${IMAGE_OGS} .
+    - docker tag ${IMAGE_OGS} ${IMAGE_OGS}:latest
+    - docker push ${IMAGE_OGS}:latest
+  tags:
+    - maytinh
+  only:
+    - main
+
+kube_deploy:
+  stage: deploy
+  before_script:
+    - curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
+    - chmod +x ./kubectl
+    - mv ./kubectl /usr/local/bin/kubectl
+    - kubectl version --client
+    - mkdir -p $HOME/.kube && cp $KUBE_CONFIG_FILE "$HOME/.kube/config"
+  script:
+    - kubectl apply -f zipkin.yaml
+  tags:
+    - maytinh
+  only:
+    - main
+
+

@@ -33,7 +33,7 @@ spec:
     spec:
       containers:
         - name: employee-service
-          image: 'sieutromkid1412/employee-service:latest'
+          image: 'registry.gitlab.com/daolebaothoa123/rest-cicd/employee-service:latest'
           imagePullPolicy: Always
           env:
             - name: JAEGER_ENDPOINT
@@ -42,3 +42,5 @@ spec:
               value: b3
           ports:
             - containerPort: 8080
+          imagePullSecrets:
+            - name: gitlab-auth

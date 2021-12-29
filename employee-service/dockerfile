@@ -1,3 +1,4 @@
 FROM adoptopenjdk:11-jre-hotspot
+VOLUME /tmp
 COPY target/employee-service-1.2-SNAPSHOT.jar app.jar
 ENTRYPOINT ["java","-jar","/app.jar"]
