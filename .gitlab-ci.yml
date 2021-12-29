@@ -1,13 +1,14 @@
 image: docker:latest
 services:
-  - docker:dind
+  - name: docker:dind
+    alias: thedockerhost
 stages:
   - build
   - package
   - deploy
 
 variables:
-  DOCKER_HOST: tcp://localhost:2375/
+  DOCKER_HOST: tcp://thedockerhost:2375/
   DOCKER_DRIVER: overlay
   DOCKER_BUILD_ID: ${CI_COMMIT_REF_NAME}_${CI_COMMIT_SHORT_SHA}
   REGISTRY_URL: registry.gitlab.com/daolebaothoa123/rest-cicd
@@ -51,19 +52,17 @@ before_script:
 build_image:
   stage: package
   script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
     - cd $DPS_DIR
     - docker build -t ${IMAGE_DPS} .
-    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
     - docker tag ${IMAGE_DPS} ${IMAGE_DPS}:latest
     - docker push ${IMAGE_DPS}:latest
     - cd $EPS_DIR
     - docker build -t ${IMAGE_EPS} .
-    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
     - docker tag ${IMAGE_EPS} ${IMAGE_EPS}:latest
     - docker push ${IMAGE_EPS}:latest
     - cd $OGS_DIR
     - docker build -t ${IMAGE_OGS} .
-    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
     - docker tag ${IMAGE_OGS} ${IMAGE_OGS}:latest
     - docker push ${IMAGE_OGS}:latest
   tags:
