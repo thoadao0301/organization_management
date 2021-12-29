@@ -1,6 +1,6 @@
 stages:
   - build
-  - -package
+  - package
   - deploy
 
 variables:
