@@ -49,35 +49,36 @@ before_script:
 #      - employee-service/target/*.jar
 #      - organization-service/target/*.jar
 
-build_image:
-  stage: package
-  script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
-    - cd $DPS_DIR
-    - docker build -t ${IMAGE_DPS} .
-    - docker tag ${IMAGE_DPS} ${IMAGE_DPS}:latest
-    - docker push ${IMAGE_DPS}:latest
-    - cd $EPS_DIR
-    - docker build -t ${IMAGE_EPS} .
-    - docker tag ${IMAGE_EPS} ${IMAGE_EPS}:latest
-    - docker push ${IMAGE_EPS}:latest
-    - cd $OGS_DIR
-    - docker build -t ${IMAGE_OGS} .
-    - docker tag ${IMAGE_OGS} ${IMAGE_OGS}:latest
-    - docker push ${IMAGE_OGS}:latest
-  tags:
-    - maytinh
-  only:
-    - main
+# build_image:
+#   stage: package
+#   script:
+#     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+#     - cd $DPS_DIR
+#     - docker build -t ${IMAGE_DPS} .
+#     - docker tag ${IMAGE_DPS} ${IMAGE_DPS}:latest
+#     - docker push ${IMAGE_DPS}:latest
+#     - cd $EPS_DIR
+#     - docker build -t ${IMAGE_EPS} .
+#     - docker tag ${IMAGE_EPS} ${IMAGE_EPS}:latest
+#     - docker push ${IMAGE_EPS}:latest
+#     - cd $OGS_DIR
+#     - docker build -t ${IMAGE_OGS} .
+#     - docker tag ${IMAGE_OGS} ${IMAGE_OGS}:latest
+#     - docker push ${IMAGE_OGS}:latest
+#   tags:
+#     - maytinh
+#    only:
+#     - main
 
 kube_deploy:
   stage: deploy
   before_script:
-    - curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
-    - chmod +x ./kubectl
-    - mv ./kubectl /usr/local/bin/kubectl
-    - kubectl version --client
-    - mkdir -p $HOME/.kube && cp $KUBE_CONFIG_FILE "$HOME/.kube/config"
+    - apk update  && apk add --no-cache curl
+    - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+    - chmod +x ./kubectl && mv ./kubectl /usr/local/bin/kubectl
+    - mkdir -p $HOME/.kube
+    - echo -n $KUBE_CONFIG | base64 -d > $HOME/.kube/config
+    - kubectl config view
   script:
     - kubectl apply -f zipkin.yaml
   tags:
