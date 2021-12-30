@@ -88,6 +88,7 @@ kube_deploy:
     - kubectl apply -f samples/addons
   script:
     - cd $DPS_DIR
+    - echo $DPS_DIR
     - kubectl -n office apply -f k8s/deployment
     - cd $EPS_DIR
     - kubectl -n office apply -f k8s/deployment
