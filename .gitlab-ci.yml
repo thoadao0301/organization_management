@@ -88,11 +88,11 @@ kube_deploy:
     - kubectl apply -f samples/addons
     - cd $DPS_DIR
     - echo $DPS_DIR
-    - kubectl -n office apply -f k8s/deployment
+    - kubectl -n office apply -f k8s/deployment.yaml
     - cd $EPS_DIR
-    - kubectl -n office apply -f k8s/deployment
+    - kubectl -n office apply -f k8s/deployment.yaml
     - cd $OGS_DIR
-    - kubectl -n office apply -f k8s/deployment
+    - kubectl -n office apply -f k8s/deployment.yaml
     - cd ../
     - kubectl aplly -f springdemo-gtwy-vs.yaml
     - kubectl get pods
