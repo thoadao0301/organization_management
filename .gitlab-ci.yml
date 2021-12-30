@@ -49,26 +49,26 @@ before_script:
 #      - employee-service/target/*.jar
 #      - organization-service/target/*.jar
 
- build_image:
-   stage: package
-   script:
-     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
-     - cd $DPS_DIR
-     - docker build -t ${IMAGE_DPS} .
-     - docker tag ${IMAGE_DPS} ${IMAGE_DPS}:latest
-     - docker push ${IMAGE_DPS}:latest
-     - cd $EPS_DIR
-     - docker build -t ${IMAGE_EPS} .
-     - docker tag ${IMAGE_EPS} ${IMAGE_EPS}:latest
-     - docker push ${IMAGE_EPS}:latest
-     - cd $OGS_DIR
-     - docker build -t ${IMAGE_OGS} .
-     - docker tag ${IMAGE_OGS} ${IMAGE_OGS}:latest
-     - docker push ${IMAGE_OGS}:latest
-   tags:
-     - maytinh
-   only:
-     - main
+build_image:
+  stage: package
+  script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+    - cd $DPS_DIR
+    - docker build -t ${IMAGE_DPS} .
+    - docker tag ${IMAGE_DPS} ${IMAGE_DPS}:latest
+    - docker push ${IMAGE_DPS}:latest
+    - cd $EPS_DIR
+    - docker build -t ${IMAGE_EPS} .
+    - docker tag ${IMAGE_EPS} ${IMAGE_EPS}:latest
+    - docker push ${IMAGE_EPS}:latest
+    - cd $OGS_DIR
+    - docker build -t ${IMAGE_OGS} .
+    - docker tag ${IMAGE_OGS} ${IMAGE_OGS}:latest
+    - docker push ${IMAGE_OGS}:latest
+  tags:
+    - maytinh
+  only:
+    - main
 
 kube_deploy:
   stage: deploy
