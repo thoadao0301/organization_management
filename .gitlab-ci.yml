@@ -82,10 +82,10 @@ kube_deploy:
     - cd istio-1.12.1
     - export PATH=$PWD/bin:$PATH
     - istioctl version
-    - istioctl install --set profile=demo -y
+    # - istioctl install --set profile=demo -y
     # - kubectl create namespace office --overwrite
-    - kubectl label namespace office istio-injection=enabled --overwrite
-    - kubectl apply -f samples/addons
+    # - kubectl label namespace office istio-injection=enabled --overwrite
+    # - kubectl apply -f samples/addons
     - cd $DPS_DIR
     - echo $DPS_DIR
     - kubectl -n office apply -f k8s/deployment.yaml
@@ -100,7 +100,7 @@ kube_deploy:
     - export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="http2")].nodePort}')
     - export GATEWAY_URL=$INGRESS_HOST:$INGRESS_PORT
     - echo $GATEWAY_URL
-    - curl $GATEWAY_URL/organization/
+    - curl --request GET http://192.168.11.120:30743/organization/
   tags:
     - maytinh
   only:
