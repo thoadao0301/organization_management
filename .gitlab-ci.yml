@@ -16,14 +16,14 @@ variables:
   IMAGE_EPS : ${REGISTRY_URL}/employee-service
   IMAGE_OGS : ${REGISTRY_URL}/organization-service
 
-# before_script:
-#   - export DPS_DIR=${PWD}/department-service
-#   - export EPS_DIR=${PWD}/employee-service
-#   - export OGS_DIR=${PWD}/organization-service
-#   - echo $DPS_DIR
-#   - echo $EPS_DIR
-#   - echo $OGS_DIR
-#   - echo docker info
+ before_script:
+   - export DPS_DIR=${PWD}/department-service
+   - export EPS_DIR=${PWD}/employee-service
+   - export OGS_DIR=${PWD}/organization-service
+   - echo $DPS_DIR
+   - echo $EPS_DIR
+   - echo $OGS_DIR
+   - echo docker info
 
 #maven-build:
 #  image: maven:3-jdk-11
@@ -78,8 +78,26 @@ kube_deploy:
     - chmod +x ./kubectl && mv ./kubectl /usr/local/bin/kubectl
     - mkdir -p $HOME/.kube && cp $KUBE_CONFIG_FILE "$HOME/.kube/config"
     - kubectl get node
+    - curl -L https://istio.io/downloadIstio | sh -
+    - cd istio-1.12.1
+    - export PATH=$PWD/bin:$PATH
+    - istioctl version
+    - istioctl install --set profile=demo -y
+    - kubectl create namespace office
+    - kubectl label office default istio-injection=enabled
+    - kubectl apply -f samples/addons
+    - istioctl dashboard kiali
   script:
-    - kubectl apply -f zipkin.yaml
+    - cd $DPS_DIR
+    - kubectl -n office apply -f k8s/deployment
+    - cd $EPS_DIR
+    - kubectl -n office apply -f k8s/deployment
+    - cd $OGS_DIR
+    - kubectl -n office apply -f k8s/deployment
+    - cd ../
+    - kubectl aplly -f springdemo-gtwy-vs.yaml
+    - kubectl get pods
+    - kubectl tunnel
   tags:
     - maytinh
   only:
