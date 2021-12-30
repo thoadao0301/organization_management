@@ -83,8 +83,8 @@ kube_deploy:
     - export PATH=$PWD/bin:$PATH
     - istioctl version
     - istioctl install --set profile=demo -y
-    # - kubectl create namespace office
-    # - kubectl label namespace office istio-injection=enabled
+    # - kubectl create namespace office --overwrite
+    - kubectl label namespace office istio-injection=enabled --overwrite
     - kubectl apply -f samples/addons
   script:
     - cd $DPS_DIR
