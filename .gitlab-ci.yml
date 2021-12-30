@@ -84,7 +84,7 @@ kube_deploy:
     - istioctl version
     - istioctl install --set profile=demo -y
     # - kubectl create namespace office
-    - kubectl label office default istio-injection=enabled
+    - kubectl label namespace office istio-injection=enabled
     - kubectl apply -f samples/addons
     - istioctl dashboard kiali
   script:
