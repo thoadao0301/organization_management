@@ -72,7 +72,7 @@ before_script:
 
 kube_deploy:
   stage: deploy
-  before_script:
+  script:
     - apk update  && apk add --no-cache curl
     - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
     - chmod +x ./kubectl && mv ./kubectl /usr/local/bin/kubectl
@@ -86,7 +86,6 @@ kube_deploy:
     # - kubectl create namespace office --overwrite
     - kubectl label namespace office istio-injection=enabled --overwrite
     - kubectl apply -f samples/addons
-  script:
     - cd $DPS_DIR
     - echo $DPS_DIR
     - kubectl -n office apply -f k8s/deployment
