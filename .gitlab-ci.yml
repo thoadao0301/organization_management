@@ -82,7 +82,7 @@ kube_deploy:
     - cd istio-1.12.1
     - export PATH=$PWD/bin:$PATH
     - istioctl version
-    # - istioctl install --set profile=demo -y
+    - istioctl install --set profile=demo -y
     # - kubectl create namespace office --overwrite
     - kubectl label namespace office istio-injection=enabled --overwrite
     - kubectl apply -f samples/addons
