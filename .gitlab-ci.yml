@@ -100,6 +100,7 @@ kube_deploy:
     - export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="http2")].port}')
     - export GATEWAY_URL=$INGRESS_HOST:$INGRESS_PORT
     - echo $GATEWAY_URL
+    - curl $GATEWAY_URL/organization/
   tags:
     - maytinh
   only:
