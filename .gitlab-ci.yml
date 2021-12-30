@@ -95,8 +95,7 @@ kube_deploy:
     - kubectl -n office apply -f k8s/deployment.yaml
     - cd ../
     - kubectl apply -f springdemo-gtwy-vs.yaml
-    - kubectl get pods
-    - kubectl tunnel
+    - kubectl get pods -n office
   tags:
     - maytinh
   only:
