@@ -83,8 +83,7 @@ kube_deploy:
     - export PATH=$PWD/bin:$PATH
     - istioctl version
     - istioctl install --set profile=demo -y
-    - kubectl delete namespace istio-system
-    - kubectl create namespace office
+    # - kubectl create namespace office
     - kubectl label office default istio-injection=enabled
     - kubectl apply -f samples/addons
     - istioctl dashboard kiali
